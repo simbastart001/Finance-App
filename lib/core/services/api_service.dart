@@ -3,48 +3,90 @@ import 'package:http/http.dart' as http;
 import '../models/transaction.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:5169/api';
+  static const String baseUrl = 'http://192.168.222.202:5169/api';
 
   static Future<List<Transaction>> getTransactions() async {
-    final response = await http.get(Uri.parse('$baseUrl/transactions'));
+    print('backIntLogs: Fetching transactions from API');
     
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      return data.map((json) => Transaction.fromJson(json)).toList();
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/transactions'));
+      print('backIntLogs: API response status: ${response.statusCode}');
+      
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        print('backIntLogs: Successfully fetched ${data.length} transactions');
+        return data.map((json) => Transaction.fromJson(json)).toList();
+      }
+      print('backIntLogs: Failed to fetch transactions - Status: ${response.statusCode}');
+      throw Exception('Failed to load transactions');
+    } catch (e) {
+      print('backIntLogs: Error fetching transactions: $e');
+      rethrow;
     }
-    throw Exception('Failed to load transactions');
   }
 
   static Future<Transaction> createTransaction(Transaction transaction) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/transactions'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(transaction.toJson()),
-    );
+    print('backIntLogs: Creating transaction: ${transaction.title}');
     
-    if (response.statusCode == 201) {
-      return Transaction.fromJson(json.decode(response.body));
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/transactions'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(transaction.toJson()),
+      );
+      
+      print('backIntLogs: Create transaction response: ${response.statusCode}');
+      
+      if (response.statusCode == 201) {
+        print('backIntLogs: Transaction created successfully');
+        return Transaction.fromJson(json.decode(response.body));
+      }
+      print('backIntLogs: Failed to create transaction - Status: ${response.statusCode}');
+      throw Exception('Failed to create transaction');
+    } catch (e) {
+      print('backIntLogs: Error creating transaction: $e');
+      rethrow;
     }
-    throw Exception('Failed to create transaction');
   }
 
   static Future<void> updateTransaction(Transaction transaction) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/transactions/${transaction.id}'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(transaction.toJson()),
-    );
+    print('backIntLogs: Updating transaction: ${transaction.id}');
     
-    if (response.statusCode != 204) {
-      throw Exception('Failed to update transaction');
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/transactions/${transaction.id}'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(transaction.toJson()),
+      );
+      
+      print('backIntLogs: Update transaction response: ${response.statusCode}');
+      
+      if (response.statusCode != 204) {
+        print('backIntLogs: Failed to update transaction - Status: ${response.statusCode}');
+        throw Exception('Failed to update transaction');
+      }
+      print('backIntLogs: Transaction updated successfully');
+    } catch (e) {
+      print('backIntLogs: Error updating transaction: $e');
+      rethrow;
     }
   }
 
   static Future<void> deleteTransaction(String id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/transactions/$id'));
+    print('backIntLogs: Deleting transaction: $id');
     
-    if (response.statusCode != 204) {
-      throw Exception('Failed to delete transaction');
+    try {
+      final response = await http.delete(Uri.parse('$baseUrl/transactions/$id'));
+      print('backIntLogs: Delete transaction response: ${response.statusCode}');
+      
+      if (response.statusCode != 204) {
+        print('backIntLogs: Failed to delete transaction - Status: ${response.statusCode}');
+        throw Exception('Failed to delete transaction');
+      }
+      print('backIntLogs: Transaction deleted successfully');
+    } catch (e) {
+      print('backIntLogs: Error deleting transaction: $e');
+      rethrow;
     }
   }
 }

@@ -193,15 +193,42 @@ class DashboardScreen extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddTransactionScreen()),
-          );
-        },
-        icon: const Icon(Icons.add),
-        label: const Text('Add Transaction'),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "sync",
+            onPressed: () async {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Syncing...'),
+                  backgroundColor: Colors.orange,
+                ),
+              );
+              await ref.read(transactionProvider.notifier).loadTransactions();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Sync completed!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            },
+            backgroundColor: Colors.blue,
+            child: const Icon(Icons.sync),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton.extended(
+            heroTag: "add",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddTransactionScreen()),
+              );
+            },
+            icon: const Icon(Icons.add),
+            label: const Text('Add Transaction'),
+          ),
+        ],
       ),
     );
   }
