@@ -34,6 +34,26 @@ class Transaction extends HiveObject {
     required this.type,
     this.description,
   });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'amount': amount,
+    'category': category,
+    'date': date.toIso8601String(),
+    'type': type.index,
+    'description': description,
+  };
+
+  factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
+    id: json['id'],
+    title: json['title'],
+    amount: json['amount'].toDouble(),
+    category: json['category'],
+    date: DateTime.parse(json['date']),
+    type: TransactionType.values[json['type']],
+    description: json['description'],
+  );
 }
 
 @HiveType(typeId: 1)

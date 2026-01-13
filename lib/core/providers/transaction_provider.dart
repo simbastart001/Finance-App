@@ -2,15 +2,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../database/database_service.dart';
 import '../models/transaction.dart';
+import '../services/api_service.dart';
 
 class TransactionNotifier extends StateNotifier<List<Transaction>> {
   TransactionNotifier() : super([]) {
     loadTransactions();
   }
 
-  void loadTransactions() {
-    state = DatabaseService.getAllTransactions()
-      ..sort((a, b) => b.date.compareTo(a.date));
+  Future<void> loadTransactions() async {
+    try {
+      final apiTransactions = await ApiService.getTransactions();
+      state = apiTransactions..sort((a, b) => b.date.compareTo(a.date));
+    } catch (e) {
+      state = DatabaseService.getAllTransactions()
+        ..sort((a, b) => b.date.compareTo(a.date));
+    }
   }
 
   Future<void> addTransaction({
@@ -30,17 +36,30 @@ class TransactionNotifier extends StateNotifier<List<Transaction>> {
       description: description,
     );
 
-    await DatabaseService.addTransaction(transaction);
+    try {
+      await ApiService.createTransaction(transaction);
+    } catch (e) {
+      await DatabaseService.addTransaction(transaction);
+    }
+    
     loadTransactions();
   }
 
   Future<void> updateTransaction(Transaction transaction) async {
-    await DatabaseService.updateTransaction(transaction);
+    try {
+      await ApiService.updateTransaction(transaction);
+    } catch (e) {
+      await DatabaseService.updateTransaction(transaction);
+    }
     loadTransactions();
   }
 
   Future<void> deleteTransaction(String id) async {
-    await DatabaseService.deleteTransaction(id);
+    try {
+      await ApiService.deleteTransaction(id);
+    } catch (e) {
+      await DatabaseService.deleteTransaction(id);
+    }
     loadTransactions();
   }
 
