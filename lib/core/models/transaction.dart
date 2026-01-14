@@ -31,6 +31,15 @@ class Transaction extends HiveObject {
   @HiveField(8)
   String? deviceId;
 
+  @HiveField(9)
+  bool isSynced;
+
+  @HiveField(10)
+  DateTime createdAt;
+
+  @HiveField(11)
+  DateTime updatedAt;
+
   Transaction({
     required this.id,
     required this.title,
@@ -41,7 +50,12 @@ class Transaction extends HiveObject {
     this.description,
     this.userId,
     this.deviceId,
-  });
+    bool? isSynced,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) : isSynced = isSynced ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -53,6 +67,9 @@ class Transaction extends HiveObject {
     'description': description,
     'userId': userId,
     'deviceId': deviceId,
+    'isSynced': isSynced,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
   };
 
   factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
@@ -65,6 +82,9 @@ class Transaction extends HiveObject {
     description: json['description'],
     userId: json['userId'],
     deviceId: json['deviceId'],
+    isSynced: json['isSynced'] ?? true,
+    createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+    updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
   );
 }
 

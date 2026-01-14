@@ -205,7 +205,7 @@ class DashboardScreen extends ConsumerWidget {
                   backgroundColor: Colors.orange,
                 ),
               );
-              await ref.read(transactionProvider.notifier).loadTransactions();
+              await ref.read(transactionProvider.notifier).sync();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Sync completed!'),

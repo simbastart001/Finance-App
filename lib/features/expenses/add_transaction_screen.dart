@@ -19,6 +19,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
   TransactionType _selectedType = TransactionType.expense;
   String? _selectedCategory;
+  bool _isSaving = false;
 
   @override
   void dispose() {
@@ -201,7 +202,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _saveTransaction,
+                  onPressed: _isSaving ? null : _saveTransaction,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _selectedType == TransactionType.income
                         ? Colors.green.shade600
@@ -209,10 +210,12 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text(
-                    'Add ${_selectedType == TransactionType.income ? 'Income' : 'Expense'}',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                  child: _isSaving
+                      ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                      : Text(
+                          'Add ${_selectedType == TransactionType.income ? 'Income' : 'Expense'}',
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                 ),
               ),
             ],
@@ -223,7 +226,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   }
 
   void _saveTransaction() async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && !_isSaving) {
+      setState(() => _isSaving = true);
+      
       final amount = double.parse(_amountController.text);
       
       await ref.read(transactionProvider.notifier).addTransaction(

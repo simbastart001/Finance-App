@@ -10,6 +10,24 @@ class DatabaseService {
     Hive.registerAdapter(TransactionAdapter());
     Hive.registerAdapter(TransactionTypeAdapter());
     _transactionBox = await Hive.openBox<Transaction>(_transactionBoxName);
+    await _migrateData();
+  }
+
+  static Future<void> _migrateData() async {
+    final box = transactionBox;
+    for (var key in box.keys) {
+      final transaction = box.get(key);
+      if (transaction != null) {
+        // Set default values for new fields if they're at epoch time
+        if (transaction.createdAt.year == 1) {
+          transaction.createdAt = transaction.date;
+        }
+        if (transaction.updatedAt.year == 1) {
+          transaction.updatedAt = transaction.date;
+        }
+        await box.put(key, transaction);
+      }
+    }
   }
 
   static Box<Transaction> get transactionBox {
@@ -43,5 +61,9 @@ class DatabaseService {
     return transactionBox.values
         .where((t) => t.date.isAfter(start) && t.date.isBefore(end))
         .toList();
+  }
+
+  static Transaction? getTransaction(String id) {
+    return transactionBox.get(id);
   }
 }

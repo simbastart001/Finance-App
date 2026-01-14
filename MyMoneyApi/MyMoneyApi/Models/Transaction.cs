@@ -24,6 +24,9 @@ public class Transaction
     
     public string? UserId { get; set; }
     public string? DeviceId { get; set; }
+    public bool IsSynced { get; set; } = true;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
 
 public enum TransactionType

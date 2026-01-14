@@ -4,6 +4,7 @@ import '../database/database_service.dart';
 import '../models/transaction.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
+import '../services/sync_service.dart';
 
 class TransactionNotifier extends StateNotifier<List<Transaction>> {
   TransactionNotifier() : super([]) {
@@ -16,6 +17,12 @@ class TransactionNotifier extends StateNotifier<List<Transaction>> {
     try {
       print('backIntLogs: Attempting to load from API');
       final apiTransactions = await ApiService.getTransactions();
+      
+      for (var t in apiTransactions) {
+        t.isSynced = true;
+        await DatabaseService.updateTransaction(t);
+      }
+      
       state = apiTransactions..sort((a, b) => b.date.compareTo(a.date));
       print('backIntLogs: Successfully loaded ${apiTransactions.length} transactions from API');
     } catch (e) {
@@ -53,9 +60,12 @@ class TransactionNotifier extends StateNotifier<List<Transaction>> {
     try {
       print('backIntLogs: Attempting to create transaction via API');
       await ApiService.createTransaction(transaction);
+      transaction.isSynced = true;
+      await DatabaseService.addTransaction(transaction);
       print('backIntLogs: Transaction created successfully via API');
     } catch (e) {
       print('backIntLogs: API create failed, saving locally: $e');
+      transaction.isSynced = false;
       await DatabaseService.addTransaction(transaction);
       print('backIntLogs: Transaction saved to local database');
     }
@@ -66,12 +76,17 @@ class TransactionNotifier extends StateNotifier<List<Transaction>> {
   Future<void> updateTransaction(Transaction transaction) async {
     print('backIntLogs: Updating transaction: ${transaction.id}');
     
+    transaction.updatedAt = DateTime.now();
+    
     try {
       print('backIntLogs: Attempting to update transaction via API');
       await ApiService.updateTransaction(transaction);
+      transaction.isSynced = true;
+      await DatabaseService.updateTransaction(transaction);
       print('backIntLogs: Transaction updated successfully via API');
     } catch (e) {
       print('backIntLogs: API update failed, updating locally: $e');
+      transaction.isSynced = false;
       await DatabaseService.updateTransaction(transaction);
       print('backIntLogs: Transaction updated in local database');
     }
@@ -111,6 +126,11 @@ class TransactionNotifier extends StateNotifier<List<Transaction>> {
 
   double getBalance() {
     return getTotalIncome() - getTotalExpenses();
+  }
+
+  Future<void> sync() async {
+    await SyncService.syncTransactions();
+    await loadTransactions();
   }
 }
 
