@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\PC\\AndroidStudioProjects\\mymoney\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2850A52D-9948-730F-FD65-4056D7D0C440}|MyMoneyApi\\MyMoneyApi\\MyMoneyApi.csproj|c:\\users\\pc\\androidstudioprojects\\mymoney\\mymoneyapi\\mymoneyapi\\controllers\\transactionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2850A52D-9948-730F-FD65-4056D7D0C440}|MyMoneyApi\\MyMoneyApi\\MyMoneyApi.csproj|solutionrelative:mymoneyapi\\mymoneyapi\\controllers\\transactionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TransactionsController.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\AndroidStudioProjects\\mymoney\\MyMoneyApi\\MyMoneyApi\\Controllers\\TransactionsController.cs",
+              "RelativeDocumentMoniker": "MyMoneyApi\\MyMoneyApi\\Controllers\\TransactionsController.cs",
+              "ToolTip": "C:\\Users\\PC\\AndroidStudioProjects\\mymoney\\MyMoneyApi\\MyMoneyApi\\Controllers\\TransactionsController.cs",
+              "RelativeToolTip": "MyMoneyApi\\MyMoneyApi\\Controllers\\TransactionsController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAwwCEAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-14T11:33:39.275Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

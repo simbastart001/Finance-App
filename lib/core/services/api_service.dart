@@ -1,15 +1,20 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/transaction.dart';
+import './auth_service.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.222.202:5169/api';
+  static const String baseUrl = 'http://192.168.222.225:5169/api';
 
   static Future<List<Transaction>> getTransactions() async {
     print('backIntLogs: Fetching transactions from API');
     
     try {
-      final response = await http.get(Uri.parse('$baseUrl/transactions'));
+      final token = AuthService.getToken();
+      final response = await http.get(
+        Uri.parse('$baseUrl/transactions'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
       print('backIntLogs: API response status: ${response.statusCode}');
       
       if (response.statusCode == 200) {
@@ -29,9 +34,10 @@ class ApiService {
     print('backIntLogs: Creating transaction: ${transaction.title}');
     
     try {
+      final token = AuthService.getToken();
       final response = await http.post(
         Uri.parse('$baseUrl/transactions'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
         body: json.encode(transaction.toJson()),
       );
       
@@ -53,9 +59,10 @@ class ApiService {
     print('backIntLogs: Updating transaction: ${transaction.id}');
     
     try {
+      final token = AuthService.getToken();
       final response = await http.put(
         Uri.parse('$baseUrl/transactions/${transaction.id}'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
         body: json.encode(transaction.toJson()),
       );
       
@@ -76,7 +83,11 @@ class ApiService {
     print('backIntLogs: Deleting transaction: $id');
     
     try {
-      final response = await http.delete(Uri.parse('$baseUrl/transactions/$id'));
+      final token = AuthService.getToken();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/transactions/$id'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
       print('backIntLogs: Delete transaction response: ${response.statusCode}');
       
       if (response.statusCode != 204) {

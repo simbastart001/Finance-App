@@ -25,6 +25,12 @@ class Transaction extends HiveObject {
   @HiveField(6)
   String? description;
 
+  @HiveField(7)
+  String? userId;
+
+  @HiveField(8)
+  String? deviceId;
+
   Transaction({
     required this.id,
     required this.title,
@@ -33,6 +39,8 @@ class Transaction extends HiveObject {
     required this.date,
     required this.type,
     this.description,
+    this.userId,
+    this.deviceId,
   });
 
   Map<String, dynamic> toJson() => {
@@ -43,6 +51,8 @@ class Transaction extends HiveObject {
     'date': date.toIso8601String(),
     'type': type.index,
     'description': description,
+    'userId': userId,
+    'deviceId': deviceId,
   };
 
   factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
@@ -53,6 +63,8 @@ class Transaction extends HiveObject {
     date: DateTime.parse(json['date']),
     type: TransactionType.values[json['type']],
     description: json['description'],
+    userId: json['userId'],
+    deviceId: json['deviceId'],
   );
 }
 

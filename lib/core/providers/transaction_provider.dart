@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import '../database/database_service.dart';
 import '../models/transaction.dart';
 import '../services/api_service.dart';
+import '../services/auth_service.dart';
 
 class TransactionNotifier extends StateNotifier<List<Transaction>> {
   TransactionNotifier() : super([]) {
@@ -34,6 +35,9 @@ class TransactionNotifier extends StateNotifier<List<Transaction>> {
   }) async {
     print('backIntLogs: Adding transaction: $title');
     
+    final user = await AuthService.getCurrentUser();
+    final deviceId = await AuthService.getDeviceId();
+    
     final transaction = Transaction(
       id: const Uuid().v4(),
       title: title,
@@ -42,6 +46,8 @@ class TransactionNotifier extends StateNotifier<List<Transaction>> {
       date: DateTime.now(),
       type: type,
       description: description,
+      userId: user?.id,
+      deviceId: deviceId,
     );
 
     try {

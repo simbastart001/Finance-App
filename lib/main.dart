@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/database/database_service.dart';
 import 'core/theme/app_theme.dart';
+import 'core/services/auth_service.dart';
+import 'features/auth/auth_screen.dart';
 import 'features/dashboard/dashboard_screen.dart';
 import 'features/expenses/transactions_screen.dart';
 import 'features/reports/reports_screen.dart';
@@ -13,8 +15,26 @@ void main() async {
   runApp(const ProviderScope(child: MyMoneyApp()));
 }
 
-class MyMoneyApp extends StatelessWidget {
+class MyMoneyApp extends StatefulWidget {
   const MyMoneyApp({super.key});
+
+  @override
+  State<MyMoneyApp> createState() => _MyMoneyAppState();
+}
+
+class _MyMoneyAppState extends State<MyMoneyApp> {
+  bool _isAuthenticated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    final user = await AuthService.getCurrentUser();
+    setState(() => _isAuthenticated = user != null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +42,7 @@ class MyMoneyApp extends StatelessWidget {
       title: 'My Money',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: const MainScreen(),
+      home: _isAuthenticated ? const MainScreen() : AuthScreen(onAuthenticated: () => setState(() => _isAuthenticated = true)),
       debugShowCheckedModeBanner: false,
     );
   }
