@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MyMoneyApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3b36a69421e5ee6cc5c9f9e9476daa37511f60e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fcbdc196df6bd07b8e0dd681a7892b8dbe39b7e3")]
 [assembly: System.Reflection.AssemblyProductAttribute("MyMoneyApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MyMoneyApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

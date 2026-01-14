@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../core/providers/transaction_provider.dart';
 import '../../core/models/transaction.dart';
+import '../../core/services/auth_service.dart';
 import '../../shared/widgets/custom_card.dart';
 import '../../shared/utils/app_utils.dart';
 import '../expenses/add_transaction_screen.dart';
@@ -24,8 +25,34 @@ class DashboardScreen extends ConsumerWidget {
         title: const Text('My Money'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Logout'),
+                  content: const Text('Are you sure you want to logout?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text('Logout'),
+                    ),
+                  ],
+                ),
+              );
+
+              if (confirm == true && context.mounted) {
+                await AuthService.logout();
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const SizedBox()),
+                  (route) => false,
+                );
+              }
+            },
           ),
         ],
       ),

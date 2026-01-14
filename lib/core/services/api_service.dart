@@ -16,8 +16,8 @@ class ApiService {
         headers: {'Authorization': 'Bearer $token'},
       );
       print('backIntLogs: API response status: ${response.statusCode}');
-      
-      if (response.statusCode == 200) {
+
+    if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         print('backIntLogs: Successfully fetched ${data.length} transactions');
         return data.map((json) => Transaction.fromJson(json)).toList();
